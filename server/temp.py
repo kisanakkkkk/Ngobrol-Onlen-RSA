@@ -1,0 +1,78 @@
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
+import base64
+
+# Generate RSA keys
+private_key = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+    backend=default_backend()
+)
+public_key = private_key.public_key()
+
+# Serialize keys to PEM format
+private_key_pem = private_key.private_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PrivateFormat.PKCS8,
+    encryption_algorithm=serialization.NoEncryption()
+)
+public_key_pem = public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+)
+
+# Example message to encrypt
+message = b"Hello, RSA encryption!"
+
+# Encrypt the message with the public key
+cipher_text = public_key.encrypt(
+    message,
+    padding.PKCS1v15()
+)
+
+# Decrypt the message with the private key
+plain_text = private_key.decrypt(
+    cipher_text,
+    padding.PKCS1v15()
+)
+
+
+
+print("Original message:", message)
+print(cipher_text)
+print("Decrypted message:", plain_text.decode())
+
+alprivpem=b'-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDN6Vh+WDNZ4KzB5XSU2C07/pkS\ndeBh4c5D/m9DXw/Pf4M5KZQjLj67DS5+plPfwClBGHyuJPGv7pCqqqNEwiLT5yo69PHJoeRt1ki1\nby+uQwIL2PGT9cKtN2Lcm2s7h/VtDZ8SVgqPp9JnbR7/aqKrFuYQSbvnNVBFKBinGjS/T1JYVBu/\njS1VNmHFMpt/3Nux7DQ2pBTHb0Cm9WDbg2U75XevSMNgamNdv5Mootentrb+GoQJCoftY/4zIuSR\nlzSltZ8EDoDFbf9YbOL8Gub+T61uVK0Qz85NNFr5S2DITZyxdihcDJxnhkIOT+o7kL2QZl6fYM5m\nTcNGfJS8TZbdAgMBAAECggEALVOpBcLvpuDE1rfmZl+B8Zt1YbFuD83vpFsNbgSui8wzfDFRaT8k\nUvOvYPTHMNFxo2E7DPCX/VTkJpWCdD/R/9h6nNjPosWO7bjGb54GnnMkr6v1Xc8zKAMxsYNK4yNm\nHLfrZNNo5r+YGulT8gCsx0G2qi44/UfooBiX+KzVoKj1qknaqVUArLpRG+BGCzlApJUrJ3LEkHAv\nrm4fUehFiIqKdRCIARiFQphF3fuoUMZedphTqKHv1sB06Ppb8NpqQ/CBZnLkIajrUJfm6A7TBJ0X\nGuFEzlqP5IhNx/mZqm0yHMagNbqG5XmpnzLdp5c5BdWwgUIaJZzwVBnCSWzoEQKBgQDyWcD5AcCf\nxHxWHFTX+14FsQ5X2J5TgGaW4XYgPPb24HDqn5zsOpFKOtQ7asgCBQMJ4M3V9uHy7H3qRdJyspYr\nnC4i1/znma2jToX28b0Cov5+sjB8Ztf8n9NKakVzQYPdys1aoou43JVo5pzxsM1xWDdphH1ylhHI\nlYGcYRkztQKBgQDZgjUtGeuAF7tVwD9fSMchxymwvSNBi1/ueoA0yquQ4jpovnO4YmllLBWGCLrc\ng1NA/nrf+I86rXAtJyHGzesFNzocO+RosLk8PTwdyibmBp4jp1QdyjIN3fY5gCekHU39k8kSyEfs\nvljuOJMu3pfPsSp4hHg97UOH5b5xixYfiQKBgQC4tRlzbxd9bUaKZstvVYDCe8B/yXRaFemaoznh\ntjVP0Z2d5Iq4LKchWRb6Nhc8Gs/HDpQyuBhbik0paY/MpTn5AO7U1aNGbQU/CxDlNjclNE8dBvgX\nSFbjjnh+JeLKxisXtoKuymYNPemN6v3A40yhT2fkPvtRgvkI1JHVOtf3ZQKBgDD5JEf3YhMBROjV\n1G77z/pHAZgNvfZwDzV+14cLav3AMi6LUzrczaY9+sqnBIvJ9eDYa4oqSPWJP4yrFuvQSW5vNOJO\niesYf1yU3QhID+IS82BLuKDMeeCtbVcdB8/n2TuTHt7fwXIImbVpf5o5/CyDU3C3QuuOlHnwvKSM\nEHshAoGBAMwXPFq4kC+vg9kYizluo4lakEptyU/Tcj1BZJTrYeg5/p72V9aNC2FMw7g4sCQhFciK\nehu+9ZmOuLZdO+HPdnH7SsDBbUz7e4/S7xwApTkzqu2NuIRAkY5g+EqXUOiKHtfTJbl7UMP4TVIq\nip0EssRRNwxrxhxJi21APUCnLybg\n-----END PRIVATE KEY-----\n'
+alpublic_key_pem=b'-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA68MSytGj3UoftP15/vqJ\ndMz8fKf+mdko6CgPxym+D9ToMI/xo5CRBwrXdd4XEeKgyAy7HY3Kt4nnplKzuvOb\noErewWovn+GUnDP0Onr+In3n7fM4HeHbOMhmdQgcJV3xvqN3ij/MPdbHz7x0WhwP\n6xrNqHH8dXHYu3zgYXUaexj6lo4kwXY0eW9imlmM1artNYAqkWXltxnhn+m9IJwd\nJMD2J9hf5h97TLoK+56SMg4XRsjSFpuNGxZmBtBjVmdEQqUf0+z6cf+Fj0m7Mm52\nsAxubN6wrzebApVvbyCv55b2MWlPL4NkiLL+VR7NG/md2igxoaI0BiUv+/hwP5MV\nZwIDAQAB\n-----END PUBLIC KEY-----\n'
+boprivpem=b'-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCfrJ0vMbiGmHw8\npPdCY6tNW8JadmXCm25EIxVPbQpBPxt49rQpql7jzwuB/+Je4F2jeDPAwsGL2goH\nm/blZmaSesxtxOjojauZUkxjldZmYuimlJuBPRZu+//S9jMf0ijERrdr2qkTlAyO\n0yWJ95GbmuLSDpDU3sb8K+1+fqE9/ymlpDk1bZUwnU7TNv+xTSD2n/eDc2nKCerC\n6uLFOXzWfVZbCuYeZvJMSDjOLjDiqcOv1uqsl6xwxzGbHWOkTFftKj+8fFwTV5Im\nTZjksF/OtEaqWmumXopEWMNcUPT45XE+4QxGVd50NTa4koRF3gfg8jXg2qdB24pg\nPTfDct1fAgMBAAECggEALJ7GBgw07pfqD+BhoFHN6v47X6A6a5mXxL6xE9L6zKTf\n/nuieQo9HhgbtSZWkgDM6gOLItDJ2VUC/IFfC1gETea2/e3K0EHWtC/FXQbgNRhq\nvzJECmeRv034fXGDc978uWyxkRg3q1rx72+dy+I89Gjh/aVIX9QpcwqrgW/Ni08z\nubiJSEFa+vlUpVQJFcl0+vbF+/Gok7rsJ1oPzfHhVR8v072Gf7j93v1MtQQ3bmjh\nRB9Wx70xoDWdNzcAtodc2Dz3TFFfUfjna8Vynn703GkgNWRrx7lTOFTflYRL9IOE\nPOUuWWAthPqNreiYgp2GRty1JiQ82rMu5cfKY74aMQKBgQDROhI07OPZRqRTCRzE\nK9VorZyvMreVaCi9bW07WlMLn1/jSvCSxpaWAaaAtDHu8zHmSghi6SciKjZX5+me\n9txlsYW92iLxPMwJpytmM8gPoioVwetzZ5Q8c9uEMh9c+aAz3pU23CiEFC/dFZHY\nTVLQq5pNK8UOXAqAlomqcRNVmwKBgQDDXq28XhVx0u6PnZX2nEXVk/fkDWs5F1Nw\nHmm7i92XDgLnvc6krgL+8bZ+ySZFMpaJtYftSYxsAb818hoTt8CVDwa51e1XcftB\nwa+80370Ami/AUAR4SzzPUSGDsUSsCHdK9RbZ1ieGR8d+HZrdSyucEMxYg+2YQV9\noJE/KUUVjQKBgAPwhfs9IqUqsVlm6IXBFYmdC0A5Qj+r8GhwsQfXEY08eP+8n38E\nAj3c1hfCTNZk+eGOL049eaEpDlDlav61Qz0e9Je4jcPhEy5zWVvZScERmp1CQ36u\nypnAzLdWgkSr5ppTbJfV2WVzQ9tz1oUuH4sSUBt34YP9s6zsKLdu3aBVAoGBALMt\nPPdZ7h7zDbmHFEcVMXLcfueXavP0MaDNM7k+YB6uSfnReRhNQxAgDHgg8MlbyPZJ\nF32HC5Lu0zedb08QIj5Shp+e1EpzjbTT9uGdsnwFTZ2HfwQm2LvIP/UWzKUEBjq6\nfMrLcFmmvoQVID4TO8RLz0QWJETmnEuIHE2qAuLtAoGABeJbcQYYVMjIv1z7GFHz\nCmxcOx+4g6nZt5yKPW/iL8WRNqAVvEhT4KakJ9/C3yP+UOIQYAZXMwbwx4gnKu9V\n5vLyDzZJaJkEicd9kAZlYIdOB4qZh5LaFjWmSeoLGpbbP7JiAun//V+lc0kvhW/G\nnMMOdK8lt/OqMlFyo9YBUyM=\n-----END PRIVATE KEY-----\n'
+bopublic_key_pem=b'-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn6ydLzG4hph8PKT3QmOr\nTVvCWnZlwptuRCMVT20KQT8bePa0Kape488Lgf/iXuBdo3gzwMLBi9oKB5v25WZm\nknrMbcTo6I2rmVJMY5XWZmLoppSbgT0Wbvv/0vYzH9IoxEa3a9qpE5QMjtMlifeR\nm5ri0g6Q1N7G/Cvtfn6hPf8ppaQ5NW2VMJ1O0zb/sU0g9p/3g3NpygnqwurixTl8\n1n1WWwrmHmbyTEg4zi4w4qnDr9bqrJescMcxmx1jpExX7So/vHxcE1eSJk2Y5LBf\nzrRGqlprpl6KRFjDXFD0+OVxPuEMRlXedDU2uJKERd4H4PI14NqnQduKYD03w3Ld\nXwIDAQAB\n-----END PUBLIC KEY-----\n'
+
+
+#ambil dari log hp priv
+priva = base64.b64decode("MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCYuB/NGg/ssVDYgZ8huwvhzH2ZBL7w6tBVkkQzq+Bmg9RCRvT6vrgCdCet23DrzBHuHXFMILGGCv0sW3FcUQD9SStzu0wsGZB/+KPE3C0jBugsTsD6/PMBFjZLHuV+ZHlWX7zT5vn5HDBdoR07z9iW8/RV7HE6e4Khcr0TXEAsDq5v8uRFg6LgJHYrxMv6sl/27w9fOOBzz7Nk5xquHT4Ur31c0PLr83RvasLEuyxRa9wkt4nP85nLuCg/mDjuXCa9zmgZ8m5eIgwtSK5c6TaU8Q05otjwhsXsyAGU4oEVDSBc3AdNG8D76+C1gW0ixkDpxgleg+91qZ/+yiovJlw/AgMBAAECggEADFJCopIZOc/+hVFD7P1B0qhkc72JyDcxss23ufGCi9LUA7rk1fwgLXaAowrC3AtdYPg4JVu35ugpD/Sau0d/zG+kVVSFq0MuwNxnHiFjdOGARt7dvAI/etV3cO0ft+hUT88ulWwbu+j10AAJM0OsJlWtX2dRpVXErtDqh07YkJVItVbcOqdG3dbxoZgUDK/pLjpMtYHov8IDODr/Bad/Cz/lGfZ2uNmSBnoEcsoSp25Sw6iLRj8DtjLGevbp+GCk+MyFloDNj/w2wSaD1MPKuJlV2bpyz/5SO+ugfa/8Oj/JkIJ3J41NJpBmT/rZFuM7ALAKj3W4jdIgQhFtqtYkqQKBgQDPc8GhBqGMpp7qJ9RCJJJlb82j14s1lgaJ+4B+GMWgh++E2hZ2s+J5ocChKQhDphj11wZvWxHm9Uhg4hQXXQ6pJiEVlH42jHcIFnbEXOBPJJiIhd3cq3Pr055voAe8GRk49kild95T4ft5nWAiKUzpO+/H1pThgu26wNt+quJrSQKBgQC8dV/iUOTF32FPFPjPhL1J8p19QnY+KgdH2onrQJCXb/5i4z4k0BQh/nETmeHZ2o4HyLnxSfJhRTzJud/6xa7va+KPsZ1eWCFbgsyKb/2ySIVUc9iE84KiNuWGkD9C2sl56uU4uhSmaIQT5aYFrgCGhouP6qP8FKQFxKQZC5LDRwKBgQCMbKTjJSPxm0/y3KcXZr4aH8YpY9v9l+IxQKdHs+kCs0F0wlN2YmmpP86uyKGpeSNoNfdLJXBG0D4AJsjGz9z+rqqyeuO8dPSV6u7WGLBVokYGE+eMWhqLxaF3mfHiZ3LlVgDy0OMUEOIy/k52kVJYhpPWx+/bfs8BHU72vSGq0QKBgQCdMqLaWnOZgezfVDT+lFB4QEGR3EBZNiGAlA/7BY4WY7qjrb2GY3KHsH+NxAwZ9i4G3C4N0Iq3DFPaSItF2GNFHo6LIbKMoaKhfIc06pmJfuiIO2Fd9OkAeh4WknfSQkFQytiM6tqSvBd/qU1E65FQpSYA084ZVPZEQXRH19mBvQKBgAfQpedQ81gkud9AyymdDFgEB4NjxsI/HM2tbI6gDUj7RIm7jX8fhtOJke3OHKG25tX31K61IYVnXXiZAvojgq3VwgawIMi0WqstZfZiyPOaVFO7PkBHAtYeZSysMQC2gg+ngt3FcngAH2k++Zcl+2KsZOMAKYjoTH9uLi2aUqmz")
+serialized = serialization.load_der_private_key(priva, password=None, backend=default_backend())
+
+#ambil dari log index.js pertama
+puba = base64.b64decode("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmLgfzRoP7LFQ2IGfIbsL4cx9mQS+8OrQVZJEM6vgZoPUQkb0+r64AnQnrdtw68wR7h1xTCCxhgr9LFtxXFEA/Ukrc7tMLBmQf/ijxNwtIwboLE7A+vzzARY2Sx7lfmR5Vl+80+b5+RwwXaEdO8/YlvP0VexxOnuCoXK9E1xALA6ub/LkRYOi4CR2K8TL+rJf9u8PXzjgc8+zZOcarh0+FK99XNDy6/N0b2rCxLssUWvcJLeJz/OZy7goP5g47lwmvc5oGfJuXiIMLUiuXOk2lPENOaLY8IbF7MgBlOKBFQ0gXNwHTRvA++vgtYFtIsZA6cYJXoPvdamf/soqLyZcPwIDAQAB")
+serializedpub = serialization.load_der_public_key(puba, backend=default_backend())
+
+# private_key = serialization.load_pem_private_key(
+#     priva,
+#     password=None,  # You can specify a password if the key is encrypted
+#     backend=default_backend()
+# )
+
+#ambil dari log hp inimessage
+x = bytes.fromhex("0e4dea1557c5f87f55f75fbd4f2d01e784318a108eaebfaa7ed1df0197cfb6f721171d20dbc32f3e2d6bf362b1cfdd1c9c640fe18030b2b05bb5a5328b9aff9e583fd90b738abf4af3712bf1e18fe8c09d8afb7b960489b59c7115adec258381c730102008b78199fa3991da632a888dfedf6e168d074ffc01c5b5d633f03c2b6976da2599fda390f85aa333a77293adf043dbb699ef178d6cfe0542c2bf7d39f195d2143aca6b06df09c7e55b8a6a477a785aef173f0924dc2dc748c5379785e77a328e771bfd1a56b320beaef78be116fc6c332e87863b7f62d5595b821c4e921f74028dfa975ee3d2abbe8ebe306ddfe087e7ad74645a19d016f9344d7886")
+
+plain_text = serialized.decrypt(
+	x,
+	padding.PKCS1v15()
+)
+
+print('decrypted = ', plain_text)
+print(serialized.private_numbers().public_numbers.n)
+print(serializedpub.public_numbers().n)
