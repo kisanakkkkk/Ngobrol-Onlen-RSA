@@ -1,5 +1,5 @@
-# Ngobrol-Onlen
-A base socket powered chat application for end to end encryption simulation and customization
+# Ngobrol-Onlen-RSA
+A base socket powered chat application for RSA-based end to end encryption simulation and customization
 
 
 ## Screenshots
